@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { SearchBar } from "antd-mobile";
 import { LeftOutline } from "antd-mobile-icons";
 import styled from "styled-components";
@@ -20,50 +20,49 @@ const StyleSearch = styled(SearchBar)`
   }
 `;
 
-class Bar extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { searchValue: "" };
-  }
+const Bar = () => {
+  const [searchValue, setSearchValue] = useState("");
 
-  render() {
-    return (
-      <>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <LeftOutline style={{ width: "10%", fontSize: "1.5rem" }} />
-          <StyleSearch
-            placeholder="请输入内容"
-            showCancelButton={() => true}
-            style={{ width: "90%", placeholderColor: "#1677ff" }}
-            cancelText="搜索"
-            value={this.state.searchValue}
-            clearOnCancel={false}
-            onChange={(value) => this.setState({ searchValue: value })}
-            onSubmit={this.getSearch}
-          />
-        </div>
-      </>
-    );
-  }
+  useEffect(() => {
+    getSearch();
+  }, []);
 
-  componentDidMount() {
-    this.getSearch();
-  }
-
-  getSearch() {
-    const { searchValue } = this.state;
+  const getSearch = () => {
     getFundSearch(searchValue) // 传递搜索关键词
       .then((res) => {
         console.log(res);
       })
       .catch((err) => console.log(err));
-  }
-}
+  };
+
+  const handleSearch = () => {
+    getSearch();
+  };
+
+  return (
+    <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <LeftOutline style={{ width: "10%", fontSize: "1.5rem" }} />
+        <StyleSearch
+          placeholder="请输入内容"
+          showCancelButton={() => true}
+          style={{ width: "90%", placeholderColor: "#1677ff" }}
+          cancelText="搜索"
+          value={searchValue}
+          clearOnCancel={false}
+          onChange={(value) => setSearchValue(value)}
+          onSubmit={handleSearch} // 调用handleSearch函数进行搜索
+        />
+      </div>
+      <div>dasd</div>
+    </>
+  );
+};
 
 export default Bar;
